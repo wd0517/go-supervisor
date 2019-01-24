@@ -68,7 +68,9 @@ func initSupervisor(config *Config) {
 }
 
 func runSupervisor() {
+	go watchChildSignal()
 	supervisor.runforever()
+
 	if supervisor.config.Httpserver != "" {
 		startWebServer(supervisor.config.Httpserver)
 	}

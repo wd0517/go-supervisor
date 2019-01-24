@@ -7,10 +7,6 @@ import (
 	"syscall"
 )
 
-func init() {
-	go watchChildSignal()
-}
-
 func watchChildSignal() {
 	var sigs = make(chan os.Signal, 3)
 	signal.Notify(sigs, syscall.SIGCHLD)
