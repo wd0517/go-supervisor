@@ -16,7 +16,10 @@ func startWebServer(listenAddr string) {
 	http.HandleFunc("/start/", actionHandler)
 	http.HandleFunc("/stop/", actionHandler)
 	http.HandleFunc("/restart/", actionHandler)
-	http.ListenAndServe(listenAddr, nil)
+	err := http.ListenAndServe(listenAddr, nil)
+	if err != nil {
+		log.Printf("Failed to start web server, %s", err.Error())
+	}
 }
 
 func statusHandler(w http.ResponseWriter, r *http.Request) {
