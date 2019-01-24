@@ -51,7 +51,7 @@ func (sp *SubProcess) spawn() {
 	sp.cmd = sp.buildCmd()
 
 	if err := sp.cmd.Start(); err != nil {
-		log.Printf("Process: [%s] start failed", sp.Name)
+		log.Printf("Process: [%s] start failed. %s", sp.Name, err.Error())
 	} else {
 		log.Printf("Process: [%s] start successful", sp.Name)
 		sp.Pid = sp.cmd.Process.Pid
