@@ -2,8 +2,10 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"os"
 )
 
 type Config struct {
@@ -47,4 +49,20 @@ func loadConfig(confFile string) (*Config, error) {
 		return c, errors.New("Error: Cannot load Config file correctly!")
 	}
 	return c, nil
+}
+
+func echoExampleConfig() {
+	fmt.Fprintf(os.Stdout, `supervisord:
+  logfile: "supervisor.log"
+  pidfile: ".supervisor.pid"
+  logpath: "logs"
+  httpserver: "127.0.0.1:8080"
+  nodaemon: false
+processes:
+- name: fileServer
+  command: python -m SimpleHTTPServer 8003
+  autostart: true
+  autorerestart: true
+  startsecs: 2
+  startretries: 3`)
 }

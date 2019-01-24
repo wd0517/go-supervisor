@@ -10,7 +10,7 @@ type Supervisor struct {
 }
 
 func (s *Supervisor) runforever() {
-	s.startAllProcesses()
+	s.startAllProcesses(true)
 }
 
 func (s *Supervisor) startProcess(name string) error {
@@ -50,20 +50,18 @@ func (s *Supervisor) restartProcess(name string) error {
 	return nil
 }
 
-func (s *Supervisor) startAllProcesses() error {
+func (s *Supervisor) startAllProcesses(init bool) {
 	for _, process := range s.Pros {
-		if process.config.AutoStart {
+		if !process.isRunning() && (!init || process.config.AutoStart) {
 			process.spawn()
 		}
 	}
-	return nil
 }
 
-func (s *Supervisor) stopAllProcesses() error {
+func (s *Supervisor) stopAllProcesses() {
 	for _, process := range s.Pros {
 		if process.isRunning() {
 			process.stop()
 		}
 	}
-	return nil
 }

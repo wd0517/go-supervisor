@@ -133,7 +133,9 @@ func (sp *SubProcess) buildCmd() *exec.Cmd {
 	cmd.Stderr = io.MultiWriter(sp.errFile)
 	cmd.Stdout = io.MultiWriter(sp.outFile)
 
-	cmd.Dir = sp.config.Directory
+	if sp.config.Directory != "" {
+		cmd.Dir = sp.config.Directory
+	}
 
 	return cmd
 }

@@ -7,10 +7,11 @@ import (
 )
 
 var (
-	flagHelp     bool
-	flagNodaemon bool
-	flagSignal   string
-	flagConfFile string
+	flagHelp            bool
+	flagNodaemon        bool
+	flagEchoExampleConf bool
+	flagSignal          string
+	flagConfFile        string
 )
 
 var (
@@ -20,6 +21,7 @@ var (
 func init() {
 	flag.BoolVar(&flagHelp, "h", false, "this help")
 	flag.BoolVar(&flagNodaemon, "nodaemon", false, "run in the foreground")
+	flag.BoolVar(&flagEchoExampleConf, "echo_conf", false, "echo example config")
 	flag.StringVar(&flagSignal, "s", "", "send `signal` to process: shutdown, stop")
 	flag.StringVar(&flagConfFile, "c", "config.yml", "specify config file")
 	flag.Usage = usage
@@ -30,6 +32,12 @@ func main() {
 
 	if flagHelp {
 		flag.Usage()
+		return
+	}
+
+	if flagEchoExampleConf {
+		echoExampleConfig()
+		return
 	}
 
 	supervisorConfig, err := loadConfig(flagConfFile)
@@ -68,7 +76,7 @@ func runSupervisor() {
 
 func usage() {
 	fmt.Fprintf(os.Stderr, `Go-Supervisor version: 1.0.0
-Usage: [-h] [-s signal] [-nodaemon] [-c config]
+Usage: [-h] [-s signal] [-nodaemon] [-c config] [-echo_conf]
 
 Options:
 `)
