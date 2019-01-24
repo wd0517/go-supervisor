@@ -35,6 +35,13 @@ supervisord:
   startretries: 0        # 进程启动失败后的尝试次数
 ```
 
+### 对外提供的接口
+
+1. 所有进程状态总览 http://127.0.0.1:8080/
+2. 根据名称启动某个进程 http://127.0.0.1:8080/start/?name=processname
+3. 根据名称停止某个进程 http://127.0.0.1:8080/stop/?name=processname
+4. 根据名称重启某个进程 http://127.0.0.1:8080/restart/?name=processname
+
 ## TODO
 - [ ] 日志切割
 - [ ] 支持Reload配置 [./supervisor -s reload]
