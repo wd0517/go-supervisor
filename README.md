@@ -26,9 +26,9 @@ supervisord:
 
 #### 普通进程配置:
 ```yml
-- name: p1                       
+- name: fileServer
   command: python -m SimpleHTTPServer 8003
-  directory: /Users/inad/Desktop/project/new-imc
+  directory: /your/directory
   autostart: false       # 是否默认启动
   autorerestart: false   # 进程崩溃后是否自动重启
   startsecs: 0           # 进程启动多少秒后认为已经成功运行
