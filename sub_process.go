@@ -86,11 +86,11 @@ func (sp *SubProcess) transition() {
 		sp.backoff = 0
 	}
 
-	if sp.backoff >= sp.config.StartRetries {
-		sp.State = FATAL
-	} else if sp.config.AutoreReStart {
+	if sp.backoff < sp.config.StartRetries && sp.config.AutoreReStart {
 		log.Printf("Process: [%s] relive", sp.Name)
 		sp.spawn()
+	} else {
+		sp.State = FATAL
 	}
 }
 
