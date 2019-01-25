@@ -42,7 +42,8 @@ supervisord:
 3. 根据名称停止某个进程 http://127.0.0.1:8080/stop/?name=processname
 4. 根据名称重启某个进程 http://127.0.0.1:8080/restart/?name=processname
 
-## TODO
+## TODOS
 - [ ] 日志切割
 - [ ] 支持Reload配置 [./supervisor -s reload]
-- [ ] 支持进程组 
+- [ ] 支持进程组
+- [ ] 支持对系统资源的限制(cgroup)
