@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/sevlyar/go-daemon"
 	"log"
 	"os"
 	"path/filepath"
 	"syscall"
+
+	"github.com/sevlyar/go-daemon"
 )
 
 func runAsDaemon(program func()) {
