@@ -89,11 +89,11 @@ func (sp *SubProcess) transition() {
 	}
 
 	if sp.backoff < sp.config.StartRetries && sp.config.AutoreReStart {
-		log.Printf("Process: [%s] relive", sp.Name)
+		log.Printf("Process: [%s] relive, backoff: %d / %d", sp.Name, sp.backoff+1, sp.config.StartRetries)
 		sp.spawn()
 	} else {
 		sp.State = FATAL
-		log.Printf("Process: [%s] fall into falta error", sp.Name)
+		log.Printf("Process: [%s] fall into fatal error, give up!", sp.Name)
 	}
 }
 
@@ -131,19 +131,19 @@ func (sp *SubProcess) buildCmd() *exec.Cmd {
 	errFileName := filepath.Join(logDir, "stderr.log")
 
 	sp.stdoutLogger = &lumberjack.Logger{
-	    Filename:   outFileName,
-	    MaxSize:    100, // megabytes
-	    MaxBackups: 3,
-	    MaxAge:     28, //days
-	    Compress:   true,
+		Filename:   outFileName,
+		MaxSize:    100, // megabytes
+		MaxBackups: 3,
+		MaxAge:     28, //days
+		Compress:   true,
 	}
 
 	sp.stderrLogger = &lumberjack.Logger{
-	    Filename:   errFileName,
-	    MaxSize:    100, // megabytes
-	    MaxBackups: 3,
-	    MaxAge:     28, //days
-	    Compress:   true,
+		Filename:   errFileName,
+		MaxSize:    100, // megabytes
+		MaxBackups: 3,
+		MaxAge:     28, //days
+		Compress:   true,
 	}
 
 	cmd.Stdout = sp.stdoutLogger
