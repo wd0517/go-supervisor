@@ -57,13 +57,13 @@ func echoExampleConfig() {
   logfile: "supervisor.log"
   pidfile: ".supervisor.pid"
   logpath: "logs"
-  httpserver: "127.0.0.1:8080"
+  httpserver: "127.0.0.1:8001"
   nodaemon: false
 processes:
 - name: fileServer
-  command: python -m SimpleHTTPServer 8003
+  command: python -m SimpleHTTPServer 8002
   autostart: true
-  autorerestart: true
+  autorestart: true
   startsecs: 2
   startretries: 3`)
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -9,6 +8,8 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 type SubProcess struct {
@@ -22,8 +23,9 @@ type SubProcess struct {
 	backoff   int
 	lastStart time.Time
 	lastStop  time.Time
-	outFile   *os.File
-	errFile   *os.File
+
+	stdoutLogger *lumberjack.Logger
+	stderrLogger *lumberjack.Logger
 
 	cmd *exec.Cmd
 	mu  sync.Mutex
@@ -68,8 +70,8 @@ func (sp *SubProcess) transition() {
 
 	sp.Pid = 0
 	sp.lastStop = time.Now()
-	sp.outFile.Close()
-	sp.errFile.Close()
+	sp.stdoutLogger.Close()
+	sp.stderrLogger.Close()
 
 	if sp.adminStop {
 		sp.State = STOPPED
@@ -91,6 +93,7 @@ func (sp *SubProcess) transition() {
 		sp.spawn()
 	} else {
 		sp.State = FATAL
+		log.Printf("Process: [%s] fall into falta error", sp.Name)
 	}
 }
 
@@ -124,14 +127,27 @@ func (sp *SubProcess) buildCmd() *exec.Cmd {
 		os.MkdirAll(logDir, 0755)
 	}
 
-	outFile := filepath.Join(logDir, "stdout.log")
-	errFile := filepath.Join(logDir, "stderr.log")
+	outFileName := filepath.Join(logDir, "stdout.log")
+	errFileName := filepath.Join(logDir, "stderr.log")
 
-	sp.outFile, _ = os.OpenFile(outFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
-	sp.errFile, _ = os.OpenFile(errFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	sp.stdoutLogger = &lumberjack.Logger{
+	    Filename:   outFileName,
+	    MaxSize:    100, // megabytes
+	    MaxBackups: 3,
+	    MaxAge:     28, //days
+	    Compress:   true,
+	}
 
-	cmd.Stderr = io.MultiWriter(sp.errFile)
-	cmd.Stdout = io.MultiWriter(sp.outFile)
+	sp.stderrLogger = &lumberjack.Logger{
+	    Filename:   errFileName,
+	    MaxSize:    100, // megabytes
+	    MaxBackups: 3,
+	    MaxAge:     28, //days
+	    Compress:   true,
+	}
+
+	cmd.Stdout = sp.stdoutLogger
+	cmd.Stderr = sp.stderrLogger
 
 	if sp.config.Directory != "" {
 		cmd.Dir = sp.config.Directory
