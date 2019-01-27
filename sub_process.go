@@ -132,17 +132,15 @@ func (sp *SubProcess) buildCmd() *exec.Cmd {
 
 	sp.stdoutLogger = &lumberjack.Logger{
 		Filename:   outFileName,
-		MaxSize:    100, // megabytes
-		MaxBackups: 3,
-		MaxAge:     28, //days
+		MaxSize:    sp.config.LogMaxMegaBytes,
+		MaxBackups: sp.config.LogBackups,
 		Compress:   true,
 	}
 
 	sp.stderrLogger = &lumberjack.Logger{
 		Filename:   errFileName,
-		MaxSize:    100, // megabytes
-		MaxBackups: 3,
-		MaxAge:     28, //days
+		MaxSize:    sp.config.LogMaxMegaBytes,
+		MaxBackups: sp.config.LogBackups,
 		Compress:   true,
 	}
 

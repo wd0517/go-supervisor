@@ -23,18 +23,19 @@ type SupervisorConfig struct {
 }
 
 type ProcessConfig struct {
-	Name          string  `yaml: "name"`
-	Command       string  `yaml: "command"`
-	Directory     string  `yaml: "directory"`
-	AutoStart     bool    `yaml: "autostart"`
-	AutoreReStart bool    `yaml: "autorestart"`
-	StartSecs     float64 `yaml: "startsecs"`
-	StartRetries  int     `yaml: "startretries"`
+	Name            string  `yaml: "name"`
+	Command         string  `yaml: "command"`
+	Directory       string  `yaml: "directory"`
+	AutoStart       bool    `yaml: "autostart"`
+	AutoreReStart   bool    `yaml: "autorestart"`
+	StartSecs       float64 `yaml: "startsecs"`
+	StartRetries    int     `yaml: "startretries"`
+	LogBackups      int     `yaml: "logbackups"`
+	LogMaxMegaBytes int     `yaml: "logmaxmegabytes"`
 }
 
 func loadConfig(confFile string) (*Config, error) {
-	c := &Config{}
-	c.Supervisord = &SupervisorConfig{}
+	c := &Config{Supervisord: &SupervisorConfig{}}
 	c.Supervisord.Logfile = "supervisor.log"
 	c.Supervisord.Pidfile = ".supervisor.pid"
 	c.Supervisord.LogPath = "logs"
@@ -45,7 +46,7 @@ func loadConfig(confFile string) (*Config, error) {
 	if err != nil {
 		return c, errors.New("Error: Config file not exists!")
 	}
-	err = yaml.Unmarshal(data, &c)
+	err = yaml.Unmarshal(data, c)
 	if err != nil {
 		return c, errors.New("Error: Cannot load Config file correctly!")
 	}
@@ -65,5 +66,7 @@ processes:
   autostart: true
   autorestart: true
   startsecs: 2
-  startretries: 3`)
+  startretries: 3
+  logmaxmegabytes: 1
+  logbackups: 10`)
 }

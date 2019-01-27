@@ -33,6 +33,8 @@ supervisord:
   autorerestart: false   # 进程崩溃后是否自动重启
   startsecs: 0           # 进程启动多少秒后认为已经成功运行
   startretries: 0        # 进程启动失败后的尝试次数
+  logmaxmegabytes: 0     # 单个日志允许的最大体积, 默认为0(不限制体积)
+  logbackups: 0          # logmaxmegabytes不为0时保存多少个旧日志
 ```
 
 ### 对外提供的接口
