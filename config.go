@@ -10,28 +10,28 @@ import (
 )
 
 type Config struct {
-	Supervisord *SupervisorConfig `yaml: "supervisord"`
-	Processes   []*ProcessConfig  `yaml: "processes`
+	Supervisord *SupervisorConfig `yaml:"supervisord"`
+	Processes   []*ProcessConfig  `yaml:"processes`
 }
 
 type SupervisorConfig struct {
-	LogPath    string `yaml: "logpath"`
-	Logfile    string `yaml: "logfile"`
-	Pidfile    string `yaml: "pidfile"`
-	Httpserver string `yaml: "httpserver"`
-	Nodaemon   bool   `yaml: "nodaemon"`
+	LogPath    string `yaml:"logpath"`
+	Logfile    string `yaml:"logfile"`
+	Pidfile    string `yaml:"pidfile"`
+	Httpserver string `yaml:"httpserver"`
+	Nodaemon   bool   `yaml:"nodaemon"`
 }
 
 type ProcessConfig struct {
-	Name            string  `yaml: "name"`
-	Command         string  `yaml: "command"`
-	Directory       string  `yaml: "directory"`
-	AutoStart       bool    `yaml: "autostart"`
-	AutoreReStart   bool    `yaml: "autorestart"`
-	StartSecs       float64 `yaml: "startsecs"`
-	StartRetries    int     `yaml: "startretries"`
-	LogBackups      int     `yaml: "logbackups"`
-	LogMaxMegaBytes int     `yaml: "logmaxmegabytes"`
+	Name            string  `yaml:"name"`
+	Command         string  `yaml:"command"`
+	Directory       string  `yaml:"directory"`
+	AutoStart       bool    `yaml:"autostart"`
+	AutoreReStart   bool    `yaml:"autorestart"`
+	StartSecs       float64 `yaml:"startsecs"`
+	StartRetries    int     `yaml:"startretries"`
+	LogBackups      int     `yaml:"logbackups"`
+	LogMaxMegaBytes int     `yaml:"logmaxmegabytes"`
 }
 
 func loadConfig(confFile string) (*Config, error) {

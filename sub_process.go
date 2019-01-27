@@ -13,16 +13,16 @@ import (
 )
 
 type SubProcess struct {
-	Pid   int
-	Name  string
-	State ProcessState
+	Pid       int          `json:"pid"`
+	Name      string       `json:"name"`
+	State     ProcessState `json:"state"`
+	LastStart time.Time    `json:"last_start"`
+	LastStop  time.Time    `json:"last_stop"`
 
 	config *ProcessConfig
 
 	adminStop bool
 	backoff   int
-	lastStart time.Time
-	lastStop  time.Time
 
 	stdoutLogger *lumberjack.Logger
 	stderrLogger *lumberjack.Logger
@@ -48,7 +48,7 @@ func (sp *SubProcess) spawn() {
 	sp.mu.Lock()
 	defer sp.mu.Unlock()
 
-	sp.lastStart = time.Now()
+	sp.LastStart = time.Now()
 	sp.adminStop = false
 	sp.cmd = sp.buildCmd()
 
@@ -69,7 +69,8 @@ func (sp *SubProcess) transition() {
 	}
 
 	sp.Pid = 0
-	sp.lastStop = time.Now()
+	sp.LastStop = time.Now()
+
 	sp.stdoutLogger.Close()
 	sp.stderrLogger.Close()
 
@@ -82,7 +83,7 @@ func (sp *SubProcess) transition() {
 		log.Printf("Process: [%s] backoff", sp.Name)
 	}
 
-	if time.Now().Sub(sp.lastStart).Seconds() <= sp.config.StartSecs {
+	if time.Now().Sub(sp.LastStart).Seconds() <= sp.config.StartSecs {
 		sp.backoff += 1
 	} else {
 		sp.backoff = 0
